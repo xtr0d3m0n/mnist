@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded',function()
      function initialize() {
         var sigCanvas = document.getElementById("board");
         var context = sigCanvas.getContext("2d");
-        context.strokeStyle = 'Black';
+        context.strokeStyle = 'White';
         var is_touch_device = 'ontouchstart' in document.documentElement;
 
         if (is_touch_device) {
@@ -76,6 +76,12 @@ window.addEventListener('DOMContentLoaded',function()
                 }).mouseout(function (mouseEvent) {
                     finishDrawing(mouseEvent, sigCanvas, context);
                 });
+            });
+            $("#clearButton").click(() =>{
+                context.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+            });
+            $("#submitButton").click(() =>{
+                console.log("NN Triggered");
             });
         }
     }
