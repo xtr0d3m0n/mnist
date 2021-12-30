@@ -12,6 +12,39 @@ window.addEventListener('DOMContentLoaded',function()
 
         return { X: x - digitCanvas.offsetLeft, Y: y - digitCanvas.offsetTop };
     }
+    function matrixify(array, n, m)
+    {
+        let result = [];
+        for (let i = 0; i < n; i++) {
+            result[i] = array.splice(0, m);
+        }
+        return result;
+    }
+    function arrayfy(matrix, n, m)
+    {
+        let result = [];
+        for(let i = 0; i < n; i++)
+        {
+            for(let j = 0; j < m; j++)
+            {
+                result.push(matrix[i][j]);
+            }
+        }
+        return result;
+    } 
+    function drawLine(mouseEvent, digitCanvas, context) {
+        let position = getPosition(mouseEvent, digitCanvas);
+        context.lineTo(position.X, position.Y);
+        context.lineWidth = 20;
+        context.stroke();
+    }
+    function finishDrawing(mouseEvent, digitCanvas, context) {
+        drawLine(mouseEvent, digitCanvas, context);
+        context.closePath();
+        $(digitCanvas).unbind("mousemove")
+                    .unbind("mouseup")
+                    .unbind("mouseout");
+    }
 
      function initialize() {
         let digitCanvas = document.getElementById("board");
@@ -77,44 +110,70 @@ window.addEventListener('DOMContentLoaded',function()
                     finishDrawing(mouseEvent, digitCanvas, context);
                 });
             });
+            $("#submitButton").click(() =>{
+                let pixelData = context.getImageData(0, 0, digitCanvas.width, digitCanvas.height);
+                //Extract alpha channels
+                let digitData = [];
+                for(let i = 0; i < 160000; i++)
+                {
+                    digitData[i] = pixelData.data[(i * 4) + 3];
+                }
+                /*let arr = [1,2,3,4,5,6,7,8,9];
+                console.log(arr);
+                let mat = matrixify(arr,3,3)
+                console.log(mat);
+                console.log(arrayfy(mat,3,3));*/
+                // Get the digit min and max x and y and calculate the width and height
+                /*let minX = Math.min.apply(null, rowArray);
+                let maxX = Math.max.apply(null, rowArray);
+                let minY = Math.min.apply(null, columnArray);
+                let maxY = Math.max.apply(null, columnArray);
+                let digitWidth = maxX - minX;
+                let digitHeight = maxY - minY;*/
+                
+                let minX = 399;
+                let maxX = 0;
+                let minY = 399;
+                let maxY = 0;
+                //Extract digit from canvas
+                digitData = matrixify(digitData, 400, 400);
+                let x = 0;
+                let y = 0;
+                for(y = 0; y < 400; y++)
+                {
+                    for(x = 0; x < 400; x++)
+                    {
+                        if(digitData[y][x] == 255)
+                        {
+                            if(x < minX)
+                            {
+                                minX = x;
+                            }
+                            if((399 - x) < (399 - maxX))
+                            {
+                                maxX = x;
+                            }
+
+                            if(y < minY)
+                            {
+                                minY =  y;
+                            }
+                            if((399 - y) < (399 - maxY))
+                            {
+                                maxY = y;
+                            }
+                        }
+                    }
+                }
+                let digitWidth = maxX - minX;
+                let digitHeight = maxY - minY;
+                console.log(digitWidth);
+                console.log(digitHeight);
+            });
             $("#clearButton").click(() =>{
                 context.clearRect(0, 0, digitCanvas.width, digitCanvas.height);
             });
-            $("#submitButton").click(() =>{
-                let pixelData = context.getImageData(0, 0, digitCanvas.width, digitCanvas.height);
-                let x , y = 0;
-                for(let i = 0; i < pixelData.data.length; i +=4)
-                {
-                    if((i % (4)) == 0)
-                    {
-                        x++
-                    }
-                    if((i % (4 * 560)) == 0)
-                    {
-                        x = 0;
-                        y++
-                    }
-                    if(pixelData.data[i] == 0 && pixelData.data[i + 1] == 179 && pixelData.data[i + 2] == 255)// find out if the rgb values corrospond #00b3ff
-                    {
-                        // send data to the nn
-                        //console.log(x,y);
-                    }
-                }
-            });
         }
-    }
-    function drawLine(mouseEvent, digitCanvas, context) {
-        let position = getPosition(mouseEvent, digitCanvas);
-        context.lineTo(position.X, position.Y);
-        context.lineWidth = 20;
-        context.stroke();
-    }
-    function finishDrawing(mouseEvent, digitCanvas, context) {
-        drawLine(mouseEvent, digitCanvas, context);
-        context.closePath();
-        $(digitCanvas).unbind("mousemove")
-                    .unbind("mouseup")
-                    .unbind("mouseout");
     }
     initialize();
 });
