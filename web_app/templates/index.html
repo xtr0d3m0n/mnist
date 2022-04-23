@@ -9,7 +9,6 @@
     <h1>XD-MNIST</h1>
     <h3>cs50 final project by xtr0d3m0n</h3>
     <h3>Handwritten digits recognizer powered by a neural network written from scratch</h3>
-    <canvas id=c></canvas>
     <h3>Draw a digit(0-9) on the pad below</h3>
     <canvas id="board" width="400" height="400"></canvas>
     <br>
@@ -17,9 +16,13 @@
         <a id="clearButton"> Clear </a>
         <a id="submitButton"> Submit </a>
     </div>
-    <h3>The Neural Network thinks you drew: {{ predictedDigit }}</h3>
+    <h3>The Neural Network thinks you drew: </h3>
+    <canvas id="dispalyCanvas" width="400" height="400"></canvas>
+    <br>
+    <canvas id="hiddenCanvas" width="400" height="400"></canvas>
 <script src="{{ url_for('static', filename='js/index.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('static', filename='js/nnvis.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='js/drawingBoard.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/drawing_board.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/neural_network.js') }}" type="text/javascript"></script>
 </body>
 </html>

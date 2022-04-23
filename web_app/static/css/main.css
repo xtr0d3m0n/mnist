@@ -11,9 +11,8 @@ canvas{
 #board {
 	margin: 0 auto;
 }
-#c {
-    width: 100%;
-    text-align:center;
+#hiddenCanvas {
+    visibility: hidden;
 }
 #buttons {
     text-align: center;
