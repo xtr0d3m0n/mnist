@@ -1,2 +1,2 @@
-# xd-mnist
-CS50 Final Project - Handwritten digit recognizer powered by a neural network written from scratch
+# mnist
+CS50 Final Project - Handwritten digit recognizer powered by a neural network
